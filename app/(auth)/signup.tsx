@@ -1,10 +1,15 @@
 import useSignupHook from "@/hooks/useSignupHook";
+import { useUser } from "@clerk/clerk-expo";
 import { Text, View, TextInput, Button, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Signup = () => {
+  const { user } = useUser();
+
+  console.log(user);
   const { email, password, setEmail, setPassword, createUserAccount } =
     useSignupHook();
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ justifyContent: "center", flex: 1, padding: 20 }}>
