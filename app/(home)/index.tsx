@@ -1,5 +1,5 @@
 import { Button, Text, View } from "react-native";
-import { SignedIn, SignedOut } from "@clerk/clerk-expo";
+import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import { router } from "expo-router";
 import useSignoutHook from "@/hooks/useSignoutHook";
 
@@ -16,9 +16,14 @@ import { LinearGradient } from "expo-linear-gradient";
 const Home = () => {
   const { sendHello } = useSocketHook();
   const { signout } = useSignoutHook();
+  const { user } = useUser();
 
   const [batu, setBatu] = useState<Batu>();
   const livebatu: Batu = useQuery(api.query.getLiveBatu.getActiveBatu);
+  const isInBatu: boolean = useQuery(api.query.userInLive.checkUserInLive, {
+    batuId: batu?._id ?? "",
+    userId: user?.id ?? "",
+  });
 
   useEffect(() => {
     setBatu(livebatu);
@@ -43,6 +48,7 @@ const Home = () => {
             batu={batu ?? null}
             minutes={minutes}
             seconds={seconds}
+            userInLive={isInBatu}
           />
         </SignedIn>
         <SignedOut>

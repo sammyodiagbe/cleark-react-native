@@ -23,10 +23,28 @@ export type PublicApiType = {
         any
       >;
     };
+    userInLive: {
+      checkUserInLive: FunctionReference<
+        "query",
+        "public",
+        { batuId: string; userId: string },
+        any
+      >;
+    };
   };
   liveBatus: {
     resetLiveBatu: {
       createNewBatu: FunctionReference<"action", "public", any, any>;
+    };
+  };
+  mutations: {
+    batu: {
+      joinBatu: FunctionReference<
+        "mutation",
+        "public",
+        { batuId: string; userId: string },
+        any
+      >;
     };
   };
 };

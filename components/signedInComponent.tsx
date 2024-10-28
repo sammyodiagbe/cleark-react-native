@@ -1,20 +1,36 @@
+import { useSocketContext } from "@/context/socketContextProvider";
 import useCountDownHook from "@/hooks/useCountDownHook";
-import { socket } from "@/utils/socket";
 import { Batu } from "@/utils/types";
 import { useUser } from "@clerk/clerk-expo";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { FC } from "react";
-import { View, Text, StyleSheet, Pressable, Image } from "react-native";
+import { FC, useEffect } from "react";
+import { View, Text, StyleSheet, Pressable, Image, Alert } from "react-native";
 
 interface TComponent {
   batu: Batu | null;
   minutes: number;
   seconds: number;
+  userInLive: boolean;
 }
-const SignedInComponent: FC<TComponent> = ({ batu, minutes, seconds }) => {
+const SignedInComponent: FC<TComponent> = ({
+  batu,
+  minutes,
+  seconds,
+  userInLive,
+}) => {
   const { minutes: nextBatuMinutes, seconds: nextBatuSeconds } =
     useCountDownHook(batu?.ends ?? null);
   const { user } = useUser();
+
+  const { socket } = useSocketContext();
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("joined-live-successful", () => {
+        Alert.alert("You are all set for batu");
+      });
+    }
+  }, [socket]);
   return (
     <View
       style={{
@@ -73,7 +89,12 @@ const SignedInComponent: FC<TComponent> = ({ batu, minutes, seconds }) => {
               </Text>
             </Pressable>
           )}
+
+          <View></View>
         </View>
+        <Text style={{ fontWeight: "bold", color: "white", fontSize: 16 }}>
+          {userInLive ? "Joined" : "Join"}
+        </Text>
       </View>
       <View style={styles.actionContainer}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
@@ -98,7 +119,11 @@ const SignedInComponent: FC<TComponent> = ({ batu, minutes, seconds }) => {
           <Pressable
             onPress={() => {
               if (!batu || batu?.started || batu?.ended || !user?.id) return;
-              socket.emit("join-live", { batuId: batu?._id, userId: user?.id });
+
+              socket?.emit("join-live", {
+                batuId: batu?._id,
+                userId: user?.id,
+              });
             }}
           >
             <View style={styles.button}>
