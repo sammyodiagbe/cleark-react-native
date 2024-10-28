@@ -1,14 +1,8 @@
 import useCountDownHook from "@/hooks/useCountDownHook";
 import { Batu } from "@/utils/types";
+import Ionicons from "@expo/vector-icons/Ionicons";
 import { FC } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Pressable,
-  Image,
-} from "react-native";
+import { View, Text, StyleSheet, Pressable, Image } from "react-native";
 
 interface TComponent {
   batu: Batu | null;
@@ -24,9 +18,24 @@ const SignedInComponent: FC<TComponent> = ({ batu, minutes, seconds }) => {
         flex: 1,
       }}
     >
-      <View>
-        <View></View>
-        <View></View>
+      <View style={styles.headerContainer}>
+        <View>
+          <Image
+            source={{ uri: "https://i.pravatar.cc/100?u=user_25" }}
+            style={styles.userProfile}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
+            <Ionicons name="diamond" size={18} color={"white"} />
+            <Text style={{ color: "white", fontWeight: 700, fontSize: 18 }}>
+              100
+            </Text>
+          </View>
+          <View>
+            <Ionicons name="settings" size={24} color={"white"} />
+          </View>
+        </View>
       </View>
       <View style={styles.contentContainer}>
         <Text style={{ color: "white", fontWeight: 700, fontSize: 24 }}>
@@ -43,6 +52,25 @@ const SignedInComponent: FC<TComponent> = ({ batu, minutes, seconds }) => {
           {minutes < 10 ? `0${minutes}` : minutes}:
           {seconds < 10 ? `0${seconds}` : seconds}
         </Text>
+        <View
+          style={{
+            padding: 15,
+            paddingHorizontal: 30,
+            backgroundColor: "transparent",
+            borderWidth: 2,
+            borderColor: "white",
+
+            borderRadius: 20,
+          }}
+        >
+          {batu?.started && (
+            <Pressable>
+              <Text style={{ color: "white", fontWeight: 500 }}>
+                Continue batu
+              </Text>
+            </Pressable>
+          )}
+        </View>
       </View>
       <View style={styles.actionContainer}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
@@ -85,6 +113,12 @@ const SignedInComponent: FC<TComponent> = ({ batu, minutes, seconds }) => {
 };
 
 const styles = StyleSheet.create({
+  headerContainer: {
+    padding: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
   contentContainer: {
     flex: 1,
     alignItems: "center",
@@ -112,8 +146,16 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 40,
-    borderWidth: 3,
-    borderColor: "slateblue",
+    borderWidth: 2,
+    borderColor: "white",
+  },
+
+  userProfile: {
+    height: 45,
+    width: 45,
+    borderRadius: 45,
+    borderWidth: 2,
+    borderColor: "white",
   },
 });
 

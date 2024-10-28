@@ -12,7 +12,7 @@ import { Batu } from "@/utils/types";
 import useCountDownHook from "@/hooks/useCountDownHook";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignedInComponent from "@/components/signedInComponent";
-
+import { LinearGradient } from "expo-linear-gradient";
 const Home = () => {
   const { sendHello } = useSocketHook();
   const { signout } = useSignoutHook();
@@ -27,35 +27,41 @@ const Home = () => {
   const { minutes, seconds } = useCountDownHook(batu?.start ?? null, () => {});
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "slateblue",
-      }}
+    <LinearGradient
+      style={{ flex: 1 }}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      colors={["#650ED8", "#9148F2", "#843FDF"]}
     >
-      <SignedIn>
-        <SignedInComponent
-          batu={batu ?? null}
-          minutes={minutes}
-          seconds={seconds}
-        />
-      </SignedIn>
-      <SignedOut>
-        <Text>You are currently not authenticated</Text>
-        <Button
-          onPress={() => {
-            router.replace("/(auth)/signup");
-          }}
-          title="Create account"
-        />
-        <Button
-          onPress={() => {
-            router.replace("/(auth)/signin");
-          }}
-          title="Sign in "
-        />
-      </SignedOut>
-    </SafeAreaView>
+      <SafeAreaView
+        style={{
+          flex: 1,
+        }}
+      >
+        <SignedIn>
+          <SignedInComponent
+            batu={batu ?? null}
+            minutes={minutes}
+            seconds={seconds}
+          />
+        </SignedIn>
+        <SignedOut>
+          <Text>You are currently not authenticated</Text>
+          <Button
+            onPress={() => {
+              router.replace("/(auth)/signup");
+            }}
+            title="Create account"
+          />
+          <Button
+            onPress={() => {
+              router.replace("/(auth)/signin");
+            }}
+            title="Sign in "
+          />
+        </SignedOut>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
