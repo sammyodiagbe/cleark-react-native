@@ -10,6 +10,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { differenceInMinutes, differenceInSeconds, min } from "date-fns";
 import { Batu } from "@/utils/types";
 import useCountDownHook from "@/hooks/useCountDownHook";
+import { SafeAreaView } from "react-native-safe-area-context";
+import SignedInComponent from "@/components/signedInComponent";
 
 const Home = () => {
   const { sendHello } = useSocketHook();
@@ -25,22 +27,18 @@ const Home = () => {
   const { minutes, seconds } = useCountDownHook(batu?.start ?? null, () => {});
 
   return (
-    <View
+    <SafeAreaView
       style={{
-        justifyContent: "center",
-        alignItems: "center",
         flex: 1,
         backgroundColor: "slateblue",
       }}
     >
       <SignedIn>
-        <Text style={{ color: "white", fontWeight: 700, fontSize: 24 }}>
-          batu {batu?.started ? "ends" : "starts"} in{" "}
-        </Text>
-        <Text style={{ fontSize: 80, fontWeight: "bold", color: "white" }}>
-          {minutes < 10 ? `0${minutes}` : minutes}:
-          {seconds < 10 ? `0${seconds}` : seconds}
-        </Text>
+        <SignedInComponent
+          batu={batu ?? null}
+          minutes={minutes}
+          seconds={seconds}
+        />
       </SignedIn>
       <SignedOut>
         <Text>You are currently not authenticated</Text>
@@ -57,7 +55,7 @@ const Home = () => {
           title="Sign in "
         />
       </SignedOut>
-    </View>
+    </SafeAreaView>
   );
 };
 
