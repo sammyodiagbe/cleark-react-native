@@ -4,5 +4,5 @@ import { Redirect, Stack } from "expo-router";
 export default function Layout() {
   const { isSignedIn } = useAuth();
 
-  return <Stack />;
+  return <Stack screenOptions={{ headerShown: false }} />;
 }

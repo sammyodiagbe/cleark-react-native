@@ -14,3 +14,14 @@ export interface TokenCache {
     };
     status: number;        // HTTP status code
   };
+
+  export type Batu = {
+    _id: string,
+    active: boolean,
+    category: string,
+    ended: boolean,
+    ends: string,
+    start: string,
+    started: boolean,
+    _creationTime?: any
+  }

@@ -15,6 +15,19 @@ export type PublicApiType = {
   };
   query: {
     getTasks: { getTasks: FunctionReference<"query", "public", any, any> };
+    getLiveBatu: {
+      getActiveBatu: FunctionReference<
+        "query",
+        "public",
+        Record<string, never>,
+        any
+      >;
+    };
+  };
+  liveBatus: {
+    resetLiveBatu: {
+      createNewBatu: FunctionReference<"action", "public", any, any>;
+    };
   };
 };
 export type InternalApiType = {};
