@@ -2,6 +2,7 @@ import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
 import { Slot } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { ConvexReactClient, ConvexProvider } from "convex/react";
+import SocketContextProvider from "@/context/socketContextProvider";
 
 const convex = new ConvexReactClient(
   process.env.EXPO_PUBLIC_CONVEX_URL as string
@@ -44,7 +45,9 @@ export default function RootLayout() {
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
       <ClerkLoaded>
         <ConvexProvider client={convex}>
-          <Slot />
+          <SocketContextProvider>
+            <Slot />
+          </SocketContextProvider>
         </ConvexProvider>
       </ClerkLoaded>
     </ClerkProvider>

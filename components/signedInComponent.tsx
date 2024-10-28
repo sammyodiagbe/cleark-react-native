@@ -1,5 +1,7 @@
 import useCountDownHook from "@/hooks/useCountDownHook";
+import { socket } from "@/utils/socket";
 import { Batu } from "@/utils/types";
+import { useUser } from "@clerk/clerk-expo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { FC } from "react";
 import { View, Text, StyleSheet, Pressable, Image } from "react-native";
@@ -12,6 +14,7 @@ interface TComponent {
 const SignedInComponent: FC<TComponent> = ({ batu, minutes, seconds }) => {
   const { minutes: nextBatuMinutes, seconds: nextBatuSeconds } =
     useCountDownHook(batu?.ends ?? null);
+  const { user } = useUser();
   return (
     <View
       style={{
@@ -93,9 +96,9 @@ const SignedInComponent: FC<TComponent> = ({ batu, minutes, seconds }) => {
         </View>
         <View>
           <Pressable
-            disabled={batu?.started}
             onPress={() => {
-              console.log("working");
+              if (!batu || batu?.started || batu?.ended || !user?.id) return;
+              socket.emit("join-live", { batuId: batu?._id, userId: user?.id });
             }}
           >
             <View style={styles.button}>
