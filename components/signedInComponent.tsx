@@ -58,7 +58,7 @@ const SignedInComponent: FC<TComponent> = ({
       </View>
       <View style={styles.contentContainer}>
         <Text style={{ color: "white", fontWeight: 700, fontSize: 24 }}>
-          batu {batu?.started ? "ends" : "starts"} in
+          Batu {batu?.started ? "ends" : "starts"} in
         </Text>
         <Text
           style={{
@@ -71,30 +71,46 @@ const SignedInComponent: FC<TComponent> = ({
           {minutes < 10 ? `0${minutes}` : minutes}:
           {seconds < 10 ? `0${seconds}` : seconds}
         </Text>
-        <View
-          style={{
-            padding: 15,
-            paddingHorizontal: 30,
-            backgroundColor: "transparent",
-            borderWidth: 2,
-            borderColor: "white",
 
-            borderRadius: 20,
-          }}
-        >
-          {batu?.started && (
-            <Pressable>
+        {batu?.started && userInLive ? (
+          <Pressable>
+            <View
+              style={{
+                padding: 15,
+                paddingHorizontal: 30,
+                backgroundColor: "transparent",
+                borderWidth: 2,
+                borderColor: "white",
+
+                borderRadius: 20,
+              }}
+            >
               <Text style={{ color: "white", fontWeight: 500 }}>
                 Continue batu
               </Text>
-            </Pressable>
-          )}
+            </View>
+          </Pressable>
+        ) : (
+          batu?.started && (
+            <Pressable>
+              <View
+                style={{
+                  padding: 15,
+                  paddingHorizontal: 30,
+                  backgroundColor: "transparent",
+                  borderWidth: 2,
+                  borderColor: "white",
 
-          <View></View>
-        </View>
-        <Text style={{ fontWeight: "bold", color: "white", fontSize: 16 }}>
-          {userInLive ? "Joined" : "Join"}
-        </Text>
+                  borderRadius: 20,
+                }}
+              >
+                <Text style={{ color: "white", fontWeight: 500 }}>
+                  Watch live batu
+                </Text>
+              </View>
+            </Pressable>
+          )
+        )}
       </View>
       <View style={styles.actionContainer}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
@@ -116,24 +132,39 @@ const SignedInComponent: FC<TComponent> = ({
           <Text style={{ color: "white", fontWeight: 600 }}>100+</Text>
         </View>
         <View>
-          <Pressable
-            onPress={() => {
-              if (!batu || batu?.started || batu?.ended || !user?.id) return;
+          {!userInLive && !batu?.started ? (
+            <Pressable
+              onPress={() => {
+                if (!batu || batu?.started || batu?.ended || !user?.id) return;
 
-              socket?.emit("join-live", {
-                batuId: batu?._id,
-                userId: user?.id,
-              });
-            }}
-          >
-            <View style={styles.button}>
+                socket?.emit("join-live", {
+                  batuId: batu?._id,
+                  userId: user?.id,
+                });
+              }}
+            >
+              <View style={styles.button}>
+                <Text style={{ color: "white", fontWeight: 600 }}>
+                  Enter batu now
+                </Text>
+              </View>
+            </Pressable>
+          ) : (
+            <View
+              style={{
+                backgroundColor: "#842FDF",
+                padding: 15,
+                borderColor: "white",
+                borderRadius: 15,
+              }}
+            >
               <Text style={{ color: "white", fontWeight: 600 }}>
-                {!batu?.started
-                  ? "Enter batu now"
-                  : `Next batu in ${nextBatuMinutes <= 9 ? `0${nextBatuMinutes}` : nextBatuMinutes}:${nextBatuSeconds <= 9 ? `0${nextBatuSeconds}` : nextBatuSeconds}`}
+                {!batu?.started && userInLive
+                  ? "All set for Batu"
+                  : "Batu is on"}
               </Text>
             </View>
-          </Pressable>
+          )}
         </View>
       </View>
     </View>

@@ -2,19 +2,15 @@ import { Button, Text, View } from "react-native";
 import { SignedIn, SignedOut, useUser } from "@clerk/clerk-expo";
 import { router } from "expo-router";
 import useSignoutHook from "@/hooks/useSignoutHook";
-
-import useSocketHook from "@/hooks/useSocketHook";
 import { useQuery } from "convex/react";
 import { api } from "../../api";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { differenceInMinutes, differenceInSeconds, min } from "date-fns";
+import { useEffect, useState } from "react";
 import { Batu } from "@/utils/types";
 import useCountDownHook from "@/hooks/useCountDownHook";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignedInComponent from "@/components/signedInComponent";
 import { LinearGradient } from "expo-linear-gradient";
 const Home = () => {
-  const { sendHello } = useSocketHook();
   const { signout } = useSignoutHook();
   const { user } = useUser();
 
@@ -29,7 +25,10 @@ const Home = () => {
     setBatu(livebatu);
   }, [livebatu]);
 
-  const { minutes, seconds } = useCountDownHook(batu?.start ?? null, () => {});
+  const { minutes, seconds } = useCountDownHook(
+    (batu?.started ? batu?.ends : batu?.start) ?? null,
+    () => {}
+  );
 
   return (
     <LinearGradient
