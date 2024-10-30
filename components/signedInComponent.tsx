@@ -3,6 +3,7 @@ import useCountDownHook from "@/hooks/useCountDownHook";
 import { Batu } from "@/utils/types";
 import { useUser } from "@clerk/clerk-expo";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { router } from "expo-router";
 import { FC, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Image, Alert } from "react-native";
 
@@ -73,7 +74,11 @@ const SignedInComponent: FC<TComponent> = ({
         </Text>
 
         {batu?.started && userInLive ? (
-          <Pressable>
+          <Pressable
+            onPress={() => {
+              router.replace("/(home)/batu");
+            }}
+          >
             <View
               style={{
                 padding: 15,

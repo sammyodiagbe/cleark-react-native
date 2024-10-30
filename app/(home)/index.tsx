@@ -27,7 +27,11 @@ const Home = () => {
 
   const { minutes, seconds } = useCountDownHook(
     (batu?.started ? batu?.ends : batu?.start) ?? null,
-    () => {}
+    () => {
+      if (livebatu.started && isInBatu) {
+        router.replace("/(home)/batu");
+      }
+    }
   );
 
   return (
