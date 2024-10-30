@@ -1,17 +1,19 @@
 import { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text } from "react-native";
+import HeaderComponent from "@/components/headerComponent";
+import LinearGradientWrapper from "@/components/LinearGradientWrapper";
 
 const BatuScreen = () => {
   useEffect(() => {
     console.log("Mounted");
   }, []);
   return (
-    <SafeAreaView
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-    >
-      <Text style={{}}>Batu Screen</Text>
-    </SafeAreaView>
+    <LinearGradientWrapper>
+      <SafeAreaView style={{ flex: 1 }}>
+        <HeaderComponent />
+      </SafeAreaView>
+    </LinearGradientWrapper>
   );
 };
 

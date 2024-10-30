@@ -6,6 +6,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import { FC, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Image, Alert } from "react-native";
+import HeaderComponent from "./headerComponent";
 
 interface TComponent {
   batu: Batu | null;
@@ -38,25 +39,7 @@ const SignedInComponent: FC<TComponent> = ({
         flex: 1,
       }}
     >
-      <View style={styles.headerContainer}>
-        <View>
-          <Image
-            source={{ uri: "https://i.pravatar.cc/100?u=user_25" }}
-            style={styles.userProfile}
-          />
-        </View>
-        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 4 }}>
-            <Ionicons name="diamond" size={18} color={"white"} />
-            <Text style={{ color: "white", fontWeight: 700, fontSize: 18 }}>
-              100
-            </Text>
-          </View>
-          <View>
-            <Ionicons name="settings" size={24} color={"white"} />
-          </View>
-        </View>
-      </View>
+      <HeaderComponent />
       <View style={styles.contentContainer}>
         <Text style={{ color: "white", fontWeight: 700, fontSize: 24 }}>
           Batu {batu?.started ? "ends" : "starts"} in
