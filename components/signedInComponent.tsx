@@ -109,6 +109,7 @@ const SignedInComponent: FC<TComponent> = ({
                   source={{
                     uri: `https://i.pravatar.cc/80?u=user_${index}`,
                   }}
+                  key={Math.random() + index}
                   style={[
                     styles.profileImage,
                     { marginLeft: index > 0 ? -(45 / 2) : 0 },

@@ -10,25 +10,18 @@ import useCountDownHook from "@/hooks/useCountDownHook";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignedInComponent from "@/components/signedInComponent";
 import { LinearGradient } from "expo-linear-gradient";
+import { Id } from "@/convex/_generated/dataModel";
+import { useLiveBatuContext } from "@/context/liveBatuProvider";
 const Home = () => {
   const { signout } = useSignoutHook();
   const { user } = useUser();
 
-  const [batu, setBatu] = useState<Batu>();
-  const livebatu: Batu = useQuery(api.query.getLiveBatu.getActiveBatu);
-  const isInBatu: boolean = useQuery(api.query.userInLive.checkUserInLive, {
-    batuId: batu?._id ?? "",
-    userId: user?.id ?? "",
-  });
-
-  useEffect(() => {
-    setBatu(livebatu);
-  }, [livebatu]);
+  const { liveBatu, isInLiveBatu } = useLiveBatuContext();
 
   const { minutes, seconds } = useCountDownHook(
-    (batu?.started ? batu?.ends : batu?.start) ?? null,
+    (liveBatu?.started ? liveBatu?.ends : liveBatu?.start) ?? null,
     () => {
-      if (livebatu.started && isInBatu) {
+      if (liveBatu?.started && isInLiveBatu) {
         router.replace("/(home)/batu");
       }
     }
@@ -48,10 +41,10 @@ const Home = () => {
       >
         <SignedIn>
           <SignedInComponent
-            batu={batu ?? null}
+            batu={liveBatu ?? null}
             minutes={minutes}
             seconds={seconds}
-            userInLive={isInBatu}
+            userInLive={isInLiveBatu}
           />
         </SignedIn>
         <SignedOut>
