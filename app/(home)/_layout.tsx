@@ -1,3 +1,4 @@
+import LiveBatuProvider from "@/context/liveBatuProvider";
 import { useAuth } from "@clerk/clerk-expo";
 import { Redirect, Stack } from "expo-router";
 
@@ -8,5 +9,9 @@ export default function Layout() {
     return <Redirect href="/(auth)/signin" />;
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <LiveBatuProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </LiveBatuProvider>
+  );
 }

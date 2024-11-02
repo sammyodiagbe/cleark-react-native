@@ -14,18 +14,10 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useLiveBatuContext } from "@/context/liveBatuProvider";
 const Home = () => {
   const { signout } = useSignoutHook();
-  const { user } = useUser();
 
   const { liveBatu, isInLiveBatu } = useLiveBatuContext();
 
-  const { minutes, seconds } = useCountDownHook(
-    (liveBatu?.started ? liveBatu?.ends : liveBatu?.start) ?? null,
-    () => {
-      if (liveBatu?.started && isInLiveBatu) {
-        router.replace("/(home)/batu");
-      }
-    }
-  );
+  const { minutes, seconds } = useCountDownHook(liveBatu?.start ?? null);
 
   return (
     <LinearGradient
@@ -41,7 +33,6 @@ const Home = () => {
       >
         <SignedIn>
           <SignedInComponent
-            batu={liveBatu ?? null}
             minutes={minutes}
             seconds={seconds}
             userInLive={isInLiveBatu}

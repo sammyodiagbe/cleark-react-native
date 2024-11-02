@@ -3,7 +3,13 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Batu } from "@/utils/types";
 import { useUser } from "@clerk/clerk-expo";
 import { useQuery } from "convex/react";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 interface TLiveBatu {
   liveBatu: Batu | null;
@@ -15,24 +21,27 @@ const liveBatuContext = createContext<TLiveBatu>({
   isInLiveBatu: false,
 });
 
-export default function LiveBatuProvider() {
+export default function LiveBatuProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const { user } = useUser();
-  const [batu, setLiveBatu] = useState<Batu | null>();
   const livebatu: Batu = useQuery(api.query.batuQueries.getActiveLiveBatu);
   const isInLiveBatu: boolean = useQuery(
     api.query.batuQueries.checkUserInLive,
     {
-      liveBatuId: batu?._id as Id<"livebatu">,
+      liveBatuId: livebatu?._id as Id<"livebatu">,
       userId: user?.id ?? "",
     }
   );
-  useEffect(() => {
-    setLiveBatu(livebatu);
-  }, [livebatu]);
+
   return (
     <liveBatuContext.Provider
-      value={{ liveBatu: batu ?? null, isInLiveBatu }}
-    ></liveBatuContext.Provider>
+      value={{ liveBatu: livebatu ?? null, isInLiveBatu }}
+    >
+      {children}
+    </liveBatuContext.Provider>
   );
 }
 

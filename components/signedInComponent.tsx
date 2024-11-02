@@ -4,22 +4,22 @@ import { Batu } from "@/utils/types";
 import { useUser } from "@clerk/clerk-expo";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
-import { FC, useEffect } from "react";
+import { FC, useContext, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Image, Alert } from "react-native";
 import HeaderComponent from "./headerComponent";
+import { useLiveBatuContext } from "@/context/liveBatuProvider";
 
 interface TComponent {
-  batu: Batu | null;
   minutes: number;
   seconds: number;
   userInLive: boolean;
 }
 const SignedInComponent: FC<TComponent> = ({
-  batu,
   minutes,
   seconds,
   userInLive,
 }) => {
+  const { liveBatu: batu } = useLiveBatuContext();
   const { minutes: nextBatuMinutes, seconds: nextBatuSeconds } =
     useCountDownHook(batu?.ends ?? null);
   const { user } = useUser();
@@ -59,7 +59,10 @@ const SignedInComponent: FC<TComponent> = ({
         {batu?.started && userInLive ? (
           <Pressable
             onPress={() => {
-              router.replace("/(home)/batu");
+              router.replace({
+                pathname: "/(home)/batu",
+                params: { batuId: batu._id },
+              });
             }}
           >
             <View
@@ -80,7 +83,14 @@ const SignedInComponent: FC<TComponent> = ({
           </Pressable>
         ) : (
           batu?.started && (
-            <Pressable>
+            <Pressable
+              onPress={() => {
+                router.replace({
+                  pathname: "/(home)/batu",
+                  params: { batuId: batu._id },
+                });
+              }}
+            >
               <View
                 style={{
                   padding: 15,
