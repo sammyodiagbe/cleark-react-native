@@ -18,7 +18,7 @@ export type ClerkAPIError = {
   status: number; // HTTP status code
 };
 
-export type Question = { question: string; answer: string; optons: string[] };
+export type Question = { question: string; answer: string; options: string[] };
 export type QuizData = {
   _id: Id<"questions">;
   currentQuestion: number;
