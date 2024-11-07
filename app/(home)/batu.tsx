@@ -12,7 +12,6 @@ import useCountDownHook from "@/hooks/useCountDownHook";
 
 const BatuScreen = () => {
   const { batuId } = useLocalSearchParams();
-  const [batu, setBatu] = useState<QuizData>();
   const quiz: QuizData | null = useQuery(
     api.query.batuQueries.getBatuQuestionData,
     {
@@ -26,9 +25,9 @@ const BatuScreen = () => {
 
   const { questions, currentQuestion, nextQuestionStartTime } = quiz ?? {};
   const { seconds } = useCountDownHook(
-    new Date(quiz?.nextQuestionStartTime! ?? null)
+    new Date(nextQuestionStartTime! ?? null)
   );
-  let progress = ((60 - seconds) / 60) * 100;
+  let progress = ((15 - seconds) / 15) * 100;
   if (!quiz) return <Text>No Quiz</Text>;
   return (
     <LinearGradientWrapper>
@@ -42,6 +41,9 @@ const BatuScreen = () => {
           <Text>Go home</Text>
         </Pressable>
         <View style={{ padding: 20, gap: 20 }}>
+          <Text style={{ color: "white", fontSize: 15, alignSelf: "center" }}>
+            {progress}
+          </Text>
           <Text style={{ color: "white", fontSize: 15, alignSelf: "center" }}>
             {seconds}
           </Text>

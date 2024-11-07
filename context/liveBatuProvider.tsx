@@ -30,10 +30,12 @@ export default function LiveBatuProvider({
   const livebatu: Batu = useQuery(api.query.batuQueries.getActiveLiveBatu);
   const isInLiveBatu: boolean = useQuery(
     api.query.batuQueries.checkUserInLive,
-    {
-      liveBatuId: livebatu?._id as Id<"livebatu">,
-      userId: user?.id ?? "",
-    }
+    livebatu?._id
+      ? {
+          liveBatuId: livebatu?._id as Id<"livebatu">,
+          userId: user?.id ?? "",
+        }
+      : "skip"
   );
 
   return (
