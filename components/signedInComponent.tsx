@@ -9,19 +9,9 @@ import { View, Text, StyleSheet, Pressable, Image, Alert } from "react-native";
 import HeaderComponent from "./headerComponent";
 import { useLiveBatuContext } from "@/context/liveBatuProvider";
 
-interface TComponent {
-  minutes: number;
-  seconds: number;
-  userInLive: boolean;
-}
-const SignedInComponent: FC<TComponent> = ({
-  minutes,
-  seconds,
-  userInLive,
-}) => {
-  const { liveBatu: batu } = useLiveBatuContext();
-  const { minutes: nextBatuMinutes, seconds: nextBatuSeconds } =
-    useCountDownHook(batu?.ends ?? null);
+const SignedInComponent: FC = () => {
+  const { liveBatu: batu, isInLiveBatu } = useLiveBatuContext();
+  const { minutes, seconds } = useCountDownHook(batu?.start ?? null);
   const { user } = useUser();
 
   const { socket } = useSocketContext();
@@ -42,7 +32,7 @@ const SignedInComponent: FC<TComponent> = ({
       <HeaderComponent />
       <View style={styles.contentContainer}>
         <Text style={{ color: "white", fontWeight: 700, fontSize: 24 }}>
-          Batu {batu?.started ? "ends" : "starts"} in
+          Batu {batu?.started ? "ends" : "starts"}
         </Text>
         <Text
           style={{
@@ -56,7 +46,7 @@ const SignedInComponent: FC<TComponent> = ({
           {seconds < 10 ? `0${seconds}` : seconds}
         </Text>
 
-        {batu?.started && userInLive ? (
+        {batu?.started && isInLiveBatu ? (
           <Pressable
             onPress={() => {
               router.replace({
@@ -131,7 +121,7 @@ const SignedInComponent: FC<TComponent> = ({
           <Text style={{ color: "white", fontWeight: 600 }}>100+</Text>
         </View>
         <View>
-          {!userInLive && !batu?.started ? (
+          {!isInLiveBatu && !batu?.started ? (
             <Pressable
               onPress={() => {
                 if (!batu || batu?.started || batu?.ended || !user?.id) return;
@@ -158,7 +148,7 @@ const SignedInComponent: FC<TComponent> = ({
               }}
             >
               <Text style={{ color: "white", fontWeight: 600 }}>
-                {!batu?.started && userInLive
+                {!batu?.started && isInLiveBatu
                   ? "All set for Batu"
                   : "Batu is on"}
               </Text>

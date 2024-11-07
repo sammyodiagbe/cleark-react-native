@@ -6,7 +6,7 @@ import LinearGradientWrapper from "@/components/LinearGradientWrapper";
 import { useQuery } from "convex/react";
 import { api } from "@/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Batu, QuizData } from "@/utils/types";
 import useCountDownHook from "@/hooks/useCountDownHook";
 
@@ -28,13 +28,19 @@ const BatuScreen = () => {
   const { seconds } = useCountDownHook(
     new Date(quiz?.nextQuestionStartTime! ?? null)
   );
-  let progress = ((10 - seconds) / 10) * 100;
+  let progress = ((60 - seconds) / 60) * 100;
   if (!quiz) return <Text>No Quiz</Text>;
   return (
     <LinearGradientWrapper>
       <SafeAreaView style={{ flex: 1 }}>
         <HeaderComponent />
-
+        <Pressable
+          onPress={() => {
+            router.replace("/(home)");
+          }}
+        >
+          <Text>Go home</Text>
+        </Pressable>
         <View style={{ padding: 20, gap: 20 }}>
           <Text style={{ color: "white", fontSize: 15, alignSelf: "center" }}>
             {seconds}
@@ -44,7 +50,7 @@ const BatuScreen = () => {
               style={{
                 height: 10,
                 width: `${progress}%`,
-                backgroundColor: "orange",
+                backgroundColor: "white",
                 marginBottom: 10,
                 borderRadius: 20,
               }}
