@@ -25,6 +25,36 @@ export type PublicApiType = {
         { liveBatuId: Id<"livebatu"> },
         any
       >;
+      getUserBatuData: FunctionReference<
+        "query",
+        "public",
+        { batuId: Id<"livebatu">; userId: string },
+        any
+      >;
+      getLiveBatuData: FunctionReference<
+        "query",
+        "public",
+        { batuId: Id<"livebatu"> },
+        any
+      >;
+    };
+  };
+  mutations: {
+    livebatuMutations: {
+      updateUserGameBatu: FunctionReference<
+        "mutation",
+        "public",
+        { data: { dataId: Id<"livebatudata">; score: number; time: number } },
+        any
+      >;
+    };
+    batu: {
+      joinBatu: FunctionReference<
+        "mutation",
+        "public",
+        { batuId: Id<"livebatu">; userId: string },
+        any
+      >;
     };
   };
 };

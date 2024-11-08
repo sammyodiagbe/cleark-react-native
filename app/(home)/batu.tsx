@@ -1,5 +1,5 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Text, View, Pressable } from "react-native";
+import { Text, View, Pressable, Alert } from "react-native";
 import HeaderComponent from "@/components/headerComponent";
 import LinearGradientWrapper from "@/components/LinearGradientWrapper";
 import { useQuery } from "convex/react";
@@ -8,15 +8,28 @@ import { Id } from "@/convex/_generated/dataModel";
 import { router, useLocalSearchParams } from "expo-router";
 import { QuizData } from "@/utils/types";
 import useCountDownHook from "@/hooks/useCountDownHook";
+import { useUser } from "@clerk/clerk-expo";
+import { useLiveBatuContext } from "@/context/liveBatuProvider";
+import OptionComponent from "@/components/OptionComponent";
 
 const BatuScreen = () => {
   const { batuId } = useLocalSearchParams();
+  const { user } = useUser();
+  const { isInLiveBatu } = useLiveBatuContext();
+
+  const batu = useQuery(api.query.batuQueries.getLiveBatuData, {
+    batuId: batuId as Id<"livebatu">,
+  });
   const quiz: QuizData | null = useQuery(
     api.query.batuQueries.getBatuQuestionData,
     {
       liveBatuId: batuId as Id<"livebatu">,
     }
   );
+  const userData = useQuery(api.query.batuQueries.getUserBatuData, {
+    batuId: batuId as Id<"livebatu">,
+    userId: user?.id ?? "",
+  });
 
   // const quiz = useQuery(api.query.batuQueries.getBatuQuestionData, {
   //   liveBatuId: liveBatu?._id as Id<"livebatu">,
@@ -37,10 +50,13 @@ const BatuScreen = () => {
             router.replace("/(home)");
           }}
         >
-          <Text>Go home</Text>
+          <View style={{ padding: 20 }}>
+            <Text>Go home</Text>
+            <Text>{userData?.score}</Text>
+          </View>
         </Pressable>
         <View style={{ padding: 20, gap: 20 }}>
-          {progress > 0 && (
+          {progress > 0 && !batu?.ended && (
             <View
               style={{
                 height: 10,
@@ -61,22 +77,13 @@ const BatuScreen = () => {
             {questions?.length &&
               questions![currentQuestion! - 1].options.map((option, index) => {
                 return (
-                  <Pressable onPress={() => {}} key={`${option}-${index}`}>
-                    <View
-                      key={`${Math.random()}-${index}`}
-                      style={{ padding: 20, backgroundColor: "#7E1FFB" }}
-                    >
-                      <Text
-                        style={{
-                          color: "white",
-                          fontSize: 18,
-                          fontWeight: 600,
-                        }}
-                      >
-                        {option}
-                      </Text>
-                    </View>
-                  </Pressable>
+                  <OptionComponent
+                    answer={questions![currentQuestion! - 1].answer}
+                    option={option}
+                    index={index}
+                    userData={userData}
+                    key={`${option}-${index}`}
+                  />
                 );
               })}
           </View>

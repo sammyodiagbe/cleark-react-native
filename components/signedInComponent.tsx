@@ -6,9 +6,13 @@ import { FC, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Image, Alert } from "react-native";
 import HeaderComponent from "./headerComponent";
 import { useLiveBatuContext } from "@/context/liveBatuProvider";
+import { useMutation } from "convex/react";
+import { api } from "@/api";
+import { Id } from "@/convex/_generated/dataModel";
 
 const SignedInComponent: FC = () => {
   const { liveBatu: batu, isInLiveBatu } = useLiveBatuContext();
+  const joinBatu = useMutation(api.mutations.batu.joinBatu);
   const { minutes, seconds } = useCountDownHook(
     batu?.ends ? batu?.ends : batu?.start ?? null
   );
@@ -31,7 +35,7 @@ const SignedInComponent: FC = () => {
     >
       <HeaderComponent />
       <View style={styles.contentContainer}>
-        <Text>{batu?.started ? "Started" : "Not started"}</Text>
+        <Text>{isInLiveBatu ? "Joined" : "Not Joined"}</Text>
         <Text style={{ color: "white", fontWeight: 700, fontSize: 24 }}>
           Batu {batu?.started ? "ends" : "starts"}
         </Text>
@@ -124,13 +128,19 @@ const SignedInComponent: FC = () => {
         <View>
           {!isInLiveBatu && !batu?.started ? (
             <Pressable
-              onPress={() => {
+              onPress={async () => {
                 if (!batu || batu?.started || batu?.ended || !user?.id) return;
-
-                socket?.emit("join-live", {
-                  batuId: batu?._id,
-                  userId: user?.id,
+                if (isInLiveBatu) return;
+                const joinbatu = await joinBatu({
+                  batuId: batu._id as Id<"livebatu">,
+                  userId: user.id,
                 });
+                if (joinbatu) {
+                  Alert.alert("Successfully joined batu");
+                  return;
+                }
+
+                Alert.alert("Could not join live batu");
               }}
             >
               <View style={styles.button}>
