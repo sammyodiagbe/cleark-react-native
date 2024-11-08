@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Text, View, Pressable } from "react-native";
 import HeaderComponent from "@/components/headerComponent";
@@ -7,7 +6,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { router, useLocalSearchParams } from "expo-router";
-import { Batu, QuizData } from "@/utils/types";
+import { QuizData } from "@/utils/types";
 import useCountDownHook from "@/hooks/useCountDownHook";
 
 const BatuScreen = () => {
@@ -27,7 +26,7 @@ const BatuScreen = () => {
   const { seconds } = useCountDownHook(
     new Date(nextQuestionStartTime! ?? null)
   );
-  let progress = ((15 - seconds) / 15) * 100;
+  let progress = ((18 - seconds) / 18) * 100;
   if (!quiz) return <Text>No Quiz</Text>;
   return (
     <LinearGradientWrapper>
@@ -41,12 +40,6 @@ const BatuScreen = () => {
           <Text>Go home</Text>
         </Pressable>
         <View style={{ padding: 20, gap: 20 }}>
-          <Text style={{ color: "white", fontSize: 15, alignSelf: "center" }}>
-            {progress}
-          </Text>
-          <Text style={{ color: "white", fontSize: 15, alignSelf: "center" }}>
-            {seconds}
-          </Text>
           {progress > 0 && (
             <View
               style={{
@@ -59,7 +52,7 @@ const BatuScreen = () => {
             />
           )}
           <Text style={{ color: "white", fontSize: 16 }}>
-            {currentQuestion} of {questions?.length}
+            Question {currentQuestion} of {questions?.length}
           </Text>
           <Text style={{ color: "white", fontSize: 24 }}>
             {questions ? questions![currentQuestion! - 1].question : ""}
@@ -68,7 +61,7 @@ const BatuScreen = () => {
             {questions?.length &&
               questions![currentQuestion! - 1].options.map((option, index) => {
                 return (
-                  <Pressable onPress={() => {}}>
+                  <Pressable onPress={() => {}} key={`${option}-${index}`}>
                     <View
                       key={`${Math.random()}-${index}`}
                       style={{ padding: 20, backgroundColor: "#7E1FFB" }}

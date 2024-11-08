@@ -31,12 +31,13 @@ const SignedInComponent: FC = () => {
     >
       <HeaderComponent />
       <View style={styles.contentContainer}>
+        <Text>{batu?.started ? "Started" : "Not started"}</Text>
         <Text style={{ color: "white", fontWeight: 700, fontSize: 24 }}>
           Batu {batu?.started ? "ends" : "starts"}
         </Text>
         <Text
           style={{
-            fontSize: 80,
+            fontSize: 64,
             fontWeight: "bold",
             color: "white",
             alignSelf: "center",
