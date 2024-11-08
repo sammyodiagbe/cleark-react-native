@@ -1,17 +1,17 @@
 import { useSocketContext } from "@/context/socketContextProvider";
 import useCountDownHook from "@/hooks/useCountDownHook";
-import { Batu } from "@/utils/types";
 import { useUser } from "@clerk/clerk-expo";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
-import { FC, useContext, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { View, Text, StyleSheet, Pressable, Image, Alert } from "react-native";
 import HeaderComponent from "./headerComponent";
 import { useLiveBatuContext } from "@/context/liveBatuProvider";
 
 const SignedInComponent: FC = () => {
   const { liveBatu: batu, isInLiveBatu } = useLiveBatuContext();
-  const { minutes, seconds } = useCountDownHook(batu?.start ?? null);
+  const { minutes, seconds } = useCountDownHook(
+    batu?.ends ? batu?.ends : batu?.start ?? null
+  );
   const { user } = useUser();
 
   const { socket } = useSocketContext();
