@@ -16,6 +16,8 @@ const SignedInComponent: FC = () => {
   const { minutes, seconds } = useCountDownHook(
     batu?.ends ? batu?.ends : batu?.start ?? null
   );
+
+  console.log(batu);
   const { user } = useUser();
 
   const { socket } = useSocketContext();
@@ -34,6 +36,19 @@ const SignedInComponent: FC = () => {
       }}
     >
       <HeaderComponent />
+      <View style={{ padding: 20, alignItems: "center" }}>
+        <View
+          style={{
+            borderWidth: 2,
+            borderColor: "rgba(255,255,255, .4)",
+            padding: 10,
+            borderRadius: 20,
+            paddingHorizontal: 30,
+          }}
+        >
+          <Text style={{ fontWeight: 800, color: "white" }}>Sport</Text>
+        </View>
+      </View>
       <View style={styles.contentContainer}>
         <Text>{isInLiveBatu ? "Joined" : "Not Joined"}</Text>
         <Text style={{ color: "white", fontWeight: 700, fontSize: 24 }}>

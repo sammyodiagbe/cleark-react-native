@@ -52,6 +52,9 @@ const BatuScreen = () => {
         >
           <View style={{ padding: 20 }}>
             <Text>Go home</Text>
+            <Text style={{ marginTop: 10, color: "white", fontSize: 24 }}>
+              {batu?.ended ? "Batu Ended" : ""}
+            </Text>
             <Text>{userData?.score}</Text>
           </View>
         </Pressable>

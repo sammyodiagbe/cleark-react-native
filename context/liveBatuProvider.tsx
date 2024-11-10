@@ -3,13 +3,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Batu } from "@/utils/types";
 import { useUser } from "@clerk/clerk-expo";
 import { useQuery } from "convex/react";
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext } from "react";
 
 interface TLiveBatu {
   liveBatu: Batu | null;
