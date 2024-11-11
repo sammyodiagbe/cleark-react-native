@@ -1,8 +1,9 @@
 import { ClerkProvider, ClerkLoaded } from "@clerk/clerk-expo";
-import { Slot } from "expo-router";
+import { Stack } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { ConvexReactClient, ConvexProvider } from "convex/react";
 import SocketContextProvider from "@/context/socketContextProvider";
+import LiveBatuProvider from "@/context/liveBatuProvider";
 
 const convex = new ConvexReactClient(
   process.env.EXPO_PUBLIC_CONVEX_URL as string
@@ -46,7 +47,39 @@ export default function RootLayout() {
       <ClerkLoaded>
         <ConvexProvider client={convex}>
           <SocketContextProvider>
-            <Slot />
+            <LiveBatuProvider>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen
+                  name="index"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="(auth)"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="home"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                {/* Define batu as a stack screen instead of a tab */}
+                <Stack.Screen
+                  name="batu/index"
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+              </Stack>
+            </LiveBatuProvider>
           </SocketContextProvider>
         </ConvexProvider>
       </ClerkLoaded>

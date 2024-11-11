@@ -47,7 +47,7 @@ const BatuScreen = () => {
         <HeaderComponent />
         <Pressable
           onPress={() => {
-            router.replace("/(home)");
+            router.replace("/batu");
           }}
         >
           <View style={{ padding: 20 }}>

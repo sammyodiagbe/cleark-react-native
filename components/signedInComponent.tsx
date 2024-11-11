@@ -17,7 +17,6 @@ const SignedInComponent: FC = () => {
     batu?.ends ? batu?.ends : batu?.start ?? null
   );
 
-  console.log(batu);
   const { user } = useUser();
 
   const { socket } = useSocketContext();
@@ -70,7 +69,7 @@ const SignedInComponent: FC = () => {
           <Pressable
             onPress={() => {
               router.replace({
-                pathname: "/(home)/batu",
+                pathname: "/batu",
                 params: { batuId: batu._id },
               });
             }}
@@ -96,7 +95,7 @@ const SignedInComponent: FC = () => {
             <Pressable
               onPress={() => {
                 router.replace({
-                  pathname: "/(home)/batu",
+                  pathname: "/batu",
                   params: { batuId: batu._id },
                 });
               }}

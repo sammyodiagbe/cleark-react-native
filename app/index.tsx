@@ -13,7 +13,7 @@ export default function Index() {
       <Text>Edit app/index.ts from file structure</Text>
       <Button
         onPress={() => {
-          router.push("/(home)");
+          router.push("/home/(tabs)");
         }}
         title="Go honme"
       ></Button>
