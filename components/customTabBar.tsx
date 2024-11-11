@@ -37,14 +37,14 @@ export default function CustomTabBar({
               color: isFocused ? "slateblue" : "#666",
               size: 24,
             })}
-            <Text
+            {/* <Text
               style={[
                 styles.tabText,
                 { color: isFocused ? "slateblue" : "#666" },
               ]}
             >
               {label}
-            </Text>
+            </Text> */}
           </TouchableOpacity>
         );
       })}
@@ -55,11 +55,28 @@ export default function CustomTabBar({
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    backgroundColor: "orange",
+    justifyContent: "space-between",
+    backgroundColor: "#fff",
+    position: "absolute",
+    bottom: 20,
+    marginHorizontal: 20,
     paddingBottom: 20,
     paddingTop: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#eee",
+    paddingHorizontal: 10,
+    elevation: 0,
+    borderRadius: 30,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  tabBar: {
+    flexDirection: "row",
+    backgroundColor: "#f0f0f0", // Or any color you want
+    borderRadius: 20, // Rounded corners
+    padding: 8, // Inner padding
+    flex: 1,
+    elevation: 0,
   },
   tab: {
     flex: 1,

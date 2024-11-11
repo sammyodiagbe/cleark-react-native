@@ -18,6 +18,7 @@ const Home = () => {
       <SafeAreaView
         style={{
           flex: 1,
+          marginBottom: 80,
         }}
       >
         <SignedIn>
