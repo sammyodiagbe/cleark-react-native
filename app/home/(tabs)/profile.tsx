@@ -18,6 +18,7 @@ const ProfileScreen = () => {
             style={styles.image}
           />
           <Text style={styles.name}>John Doe</Text>
+          <Text style={styles.xp}>7.3k XP</Text>
         </View>
         <View style={styles.stats}>
           <Text style={styles.title}>Batu Stats</Text>
@@ -129,6 +130,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
     paddingBottom: 10,
+  },
+  xp: {
+    fontSize: 14,
+    color: "#777",
+    fontWeight: "bold",
   },
 });
 
