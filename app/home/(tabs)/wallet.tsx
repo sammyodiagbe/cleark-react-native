@@ -1,28 +1,64 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TouchableOpacity, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TransactionActivityComponent from "@/components/transactionActivity";
+import {
+  StripeProvider,
+  initPaymentSheet,
+  presentPaymentSheet,
+} from "@stripe/stripe-react-native";
+import { getPaymentData } from "@/utils/helpers";
 const WalletScreen = () => {
-  return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Hi, Samson</Text>
-        <Text style={styles.headerSubText}>Your balance</Text>
-        <Text style={styles.balance}>$750.25</Text>
-        <View style={styles.actionContainer}>
-          <TouchableOpacity style={[styles.actionButton, styles.addFunds]}>
-            <Ionicons name="add-circle-sharp" size={18} color="#fff" />
-            <Text style={styles.actionButtonText}>Add funds</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton}>
-            <Ionicons name="arrow-down-circle-sharp" size={18} />
+  const openPaymentSheet = async () => {
+    const { customer, ephemeralKey, clientSecret } = await getPaymentData();
+    console.log(customer, ephemeralKey, clientSecret);
+    const { error } = await initPaymentSheet({
+      returnURL: "https://www.google.com",
+      merchantDisplayName: "Brainbatu, Inc.",
+      customerId: customer,
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: clientSecret,
 
-            <Text>Withdraw funds</Text>
-          </TouchableOpacity>
+      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+      //methods that complete payment after a delay, like SEPA Debit and Sofort.
+      allowsDelayedPaymentMethods: true,
+      defaultBillingDetails: {
+        name: "Jane Doe",
+      },
+    });
+    if (error) {
+      Alert.alert(error.message);
+    } else {
+      await presentPaymentSheet();
+    }
+  };
+  return (
+    <StripeProvider
+      publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
+    >
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>Hi, Samson</Text>
+          <Text style={styles.headerSubText}>Your balance</Text>
+          <Text style={styles.balance}>$750.25</Text>
+          <View style={styles.actionContainer}>
+            <TouchableOpacity
+              onPress={() => openPaymentSheet()}
+              style={[styles.actionButton, styles.addFunds]}
+            >
+              <Ionicons name="add-circle-sharp" size={18} color="#fff" />
+              <Text style={styles.actionButtonText}>Add funds</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.actionButton}>
+              <Ionicons name="arrow-down-circle-sharp" size={18} />
+
+              <Text>Withdraw funds</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-      <TransactionActivityComponent />
-    </SafeAreaView>
+        <TransactionActivityComponent />
+      </SafeAreaView>
+    </StripeProvider>
   );
 };
 
@@ -39,7 +75,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   addFunds: {
-    backgroundColor: "#8338ec",
+    backgroundColor: "green",
     color: "#fff",
   },
   actionButtonText: {

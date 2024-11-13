@@ -6,3 +6,25 @@ export const users = Array.from({ length: 20 }, (_, index) => {
     imageUrl: `https://i.pravatar.cc/60?user=user_${userNumber}`,
   };
 });
+
+export const getPaymentData = async () => {
+  try {
+    const { customer, ephemeralKey, clientSecret } = await fetch(
+      "http://localhost:8000/stripe/payment-intent",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((res) => res.json());
+    return {
+      customer: customer as string,
+      ephemeralKey: ephemeralKey as string,
+      clientSecret: clientSecret as string,
+    };
+  } catch (error: any) {
+    console.log(error);
+  }
+  return { customer: "", ephemeralKey: "", clientSecret: "" };
+};

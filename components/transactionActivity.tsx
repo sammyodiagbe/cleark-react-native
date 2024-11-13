@@ -41,7 +41,7 @@ const TransactionItem = ({
 
       <Text style={styles.transactionType}>{transaction.type}</Text>
       {transaction.success ? (
-        <Ionicons name="checkmark-circle" size={18} color="#00ff00" />
+        <Ionicons name="checkmark-circle" size={18} color="green" />
       ) : (
         <Ionicons name="close-circle" size={18} color="#ff0000" />
       )}
