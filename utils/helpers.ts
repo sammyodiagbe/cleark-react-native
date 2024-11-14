@@ -10,7 +10,7 @@ export const users = Array.from({ length: 20 }, (_, index) => {
 export const getPaymentData = async () => {
   try {
     const { customer, ephemeralKey, clientSecret } = await fetch(
-      "http://localhost:8000/stripe/payment-intent",
+      "http://192.168.43.23:8000/stripe/payment-intent",
       {
         method: "POST",
         headers: {
