@@ -1,6 +1,9 @@
-import { Text, View, Image, StyleSheet } from "react-native";
+import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import useSignoutHook from "@/hooks/useSignoutHook";
 const HeaderComponent = () => {
+  const { signout } = useSignoutHook();
+
   return (
     <View style={styles.headerContainer}>
       <View>
@@ -18,6 +21,11 @@ const HeaderComponent = () => {
         </View>
         <View>
           <Ionicons name="settings" size={24} color={"white"} />
+        </View>
+        <View>
+          <Pressable onPress={() => signout()}>
+            <Ionicons name="log-out" size={24} color={"white"} />
+          </Pressable>
         </View>
       </View>
     </View>
