@@ -5,6 +5,24 @@ export const api: PublicApiType = anyApi as unknown as PublicApiType;
 export const internal: InternalApiType = anyApi as unknown as InternalApiType;
 
 export type PublicApiType = {
+  mutations: {
+    batu: {
+      joinBatu: FunctionReference<
+        "mutation",
+        "public",
+        { batuId: Id<"livebatu">; userId: string },
+        any
+      >;
+    };
+    livebatuMutations: {
+      updateUserGameBatu: FunctionReference<
+        "mutation",
+        "public",
+        { data: { dataId: Id<"livebatudata">; score: number; time: number } },
+        any
+      >;
+    };
+  };
   query: {
     batuQueries: {
       getActiveLiveBatu: FunctionReference<
@@ -38,21 +56,11 @@ export type PublicApiType = {
         any
       >;
     };
-  };
-  mutations: {
-    livebatuMutations: {
-      updateUserGameBatu: FunctionReference<
-        "mutation",
+    users: {
+      getUserData: FunctionReference<
+        "query",
         "public",
-        { data: { dataId: Id<"livebatudata">; score: number; time: number } },
-        any
-      >;
-    };
-    batu: {
-      joinBatu: FunctionReference<
-        "mutation",
-        "public",
-        { batuId: Id<"livebatu">; userId: string },
+        { email_address: string },
         any
       >;
     };

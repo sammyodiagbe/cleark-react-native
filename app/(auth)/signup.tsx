@@ -6,7 +6,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const Signup = () => {
   const { user } = useUser();
 
-  console.log(user);
   const { email, password, setEmail, setPassword, createUserAccount } =
     useSignupHook();
 
