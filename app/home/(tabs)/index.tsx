@@ -5,9 +5,10 @@ import useSignoutHook from "@/hooks/useSignoutHook";
 import { SafeAreaView } from "react-native-safe-area-context";
 import SignedInComponent from "@/components/signedInComponent";
 import { LinearGradient } from "expo-linear-gradient";
+import { useUserContext } from "@/context/userProvider";
 const Home = () => {
   const { signout } = useSignoutHook();
-
+  const { user } = useUserContext();
   return (
     <LinearGradient
       style={{ flex: 1 }}
@@ -22,6 +23,7 @@ const Home = () => {
         }}
       >
         <SignedIn>
+          <Text>{user?.email_address}</Text>
           <SignedInComponent />
         </SignedIn>
         <SignedOut>
