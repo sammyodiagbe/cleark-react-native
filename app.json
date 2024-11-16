@@ -13,7 +13,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "NSCameraUsageDescription": "This app requires access to the camera to scan documents for identity verification.",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app requires access to the camera to scan documents for identity verification."
+      }
     },
     "android": {
       "adaptiveIcon": {

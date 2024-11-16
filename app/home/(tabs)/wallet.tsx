@@ -8,10 +8,18 @@ import {
   presentPaymentSheet,
 } from "@stripe/stripe-react-native";
 import { getPaymentData } from "@/utils/helpers";
+import { useUserContext } from "@/context/userProvider";
+import { useStripeIdentity } from "@stripe/stripe-identity-react-native";
+import useVerificationHook from "@/hooks/useVerificationHook";
+import { useCallback } from "react";
 const WalletScreen = () => {
+  const { user } = useUserContext();
+  const { fetchOptions } = useVerificationHook();
+  const { status, present, loading } = useStripeIdentity(fetchOptions);
+
   const openPaymentSheet = async () => {
     const { customer, ephemeralKey, clientSecret } = await getPaymentData();
-    console.log(customer, ephemeralKey, clientSecret);
+
     const { error } = await initPaymentSheet({
       returnURL: "https://www.google.com",
       merchantDisplayName: "Brainbatu, Inc.",
@@ -26,12 +34,22 @@ const WalletScreen = () => {
         name: "Jane Doe",
       },
     });
+
     if (error) {
       Alert.alert(error.message);
     } else {
       await presentPaymentSheet();
     }
   };
+
+  const startWithdrawalProcess = useCallback(async () => {
+    if (!user.stripeConnectAccountLinked) {
+      await present();
+    } else {
+      Alert.alert("Go ahead and withdraw funds");
+    }
+  }, [present]);
+
   return (
     <StripeProvider
       publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
@@ -40,7 +58,7 @@ const WalletScreen = () => {
         <View style={styles.header}>
           <Text style={styles.headerText}>Hi, Samson</Text>
           <Text style={styles.headerSubText}>Your balance</Text>
-          <Text style={styles.balance}>$750.25</Text>
+          <Text style={styles.balance}>${user?.balance}</Text>
           <View style={styles.actionContainer}>
             <TouchableOpacity
               onPress={() => openPaymentSheet()}
@@ -49,7 +67,10 @@ const WalletScreen = () => {
               <Ionicons name="add-circle-sharp" size={18} color="#fff" />
               <Text style={styles.actionButtonText}>Add funds</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionButton}>
+            <TouchableOpacity
+              style={styles.actionButton}
+              onPress={startWithdrawalProcess}
+            >
               <Ionicons name="arrow-down-circle-sharp" size={18} />
 
               <Text>Withdraw funds</Text>
