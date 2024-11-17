@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Camera } from "expo-camera";
 import {
   IdentityVerificationSheetOptions,
   useStripeIdentity,

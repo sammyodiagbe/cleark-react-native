@@ -9,13 +9,13 @@ import {
 } from "@stripe/stripe-react-native";
 import { getPaymentData } from "@/utils/helpers";
 import { useUserContext } from "@/context/userProvider";
-import { useStripeIdentity } from "@stripe/stripe-identity-react-native";
-import useVerificationHook from "@/hooks/useVerificationHook";
 import { useCallback } from "react";
+import UseCameraHook from "@/hooks/useCameraHook";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+
 const WalletScreen = () => {
   const { user } = useUserContext();
-  const { fetchOptions } = useVerificationHook();
-  const { status, present, loading } = useStripeIdentity(fetchOptions);
+  const { permission, requestPermission } = UseCameraHook();
 
   const openPaymentSheet = async () => {
     const { customer, ephemeralKey, clientSecret } = await getPaymentData();
@@ -43,12 +43,15 @@ const WalletScreen = () => {
   };
 
   const startWithdrawalProcess = useCallback(async () => {
-    if (!user.stripeConnectAccountLinked) {
-      await present();
+    if (!permission) {
+      await requestPermission();
     } else {
-      Alert.alert("Go ahead and withdraw funds");
+      if (!user.stripeConnectAccountLinked) {
+      } else {
+        Alert.alert("Go ahead and withdraw funds");
+      }
     }
-  }, [present]);
+  }, []);
 
   return (
     <StripeProvider

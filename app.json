@@ -14,7 +14,6 @@
     },
     "ios": {
       "supportsTablet": true,
-      "NSCameraUsageDescription": "This app requires access to the camera to scan documents for identity verification.",
       "infoPlist": {
         "NSCameraUsageDescription": "This app requires access to the camera to scan documents for identity verification."
       }
@@ -31,7 +30,13 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
