@@ -11,9 +11,10 @@ import { getPaymentData } from "@/utils/helpers";
 import { useUserContext } from "@/context/userProvider";
 import { useCallback } from "react";
 import UseCameraHook from "@/hooks/useCameraHook";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
 import CameraVerificationComponent from "@/components/cameraVerificationComponent";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 const WalletScreen = () => {
   const { user } = useUserContext();
   const { permission, requestPermission } = UseCameraHook();
@@ -44,13 +45,16 @@ const WalletScreen = () => {
   };
 
   const startWithdrawalProcess = useCallback(async () => {
+    console.log("startWithdrawalProcess");
     if (!permission) {
       await requestPermission();
     } else {
       if (!user.stripeConnectAccountLinked) {
         console.log(bottomSheetRef.current);
+        console.log("expanding");
         await bottomSheetRef.current?.expand();
       } else {
+        1;
         Alert.alert("Go ahead and withdraw funds");
       }
     }
@@ -61,30 +65,35 @@ const WalletScreen = () => {
       publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY!}
     >
       <SafeAreaView style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.headerText}>Hi, Samson</Text>
-          <Text style={styles.headerSubText}>Your balance</Text>
-          <Text style={styles.balance}>${user?.balance}</Text>
-          <View style={styles.actionContainer}>
-            <TouchableOpacity
-              onPress={() => openPaymentSheet()}
-              style={[styles.actionButton, styles.addFunds]}
-            >
-              <Ionicons name="add-circle-sharp" size={18} color="#fff" />
-              <Text style={styles.actionButtonText}>Add funds</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={startWithdrawalProcess}
-            >
-              <Ionicons name="arrow-down-circle-sharp" size={18} />
+        <GestureHandlerRootView
+          style={{ flex: 1, padding: 20, paddingBottom: 0 }}
+        >
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Hi, Samson</Text>
+            <Text style={styles.headerSubText}>Your balance</Text>
+            <Text style={styles.balance}>${user?.balance}</Text>
+            <View style={styles.actionContainer}>
+              <TouchableOpacity
+                onPress={() => openPaymentSheet()}
+                style={[styles.actionButton, styles.addFunds]}
+              >
+                <Ionicons name="add-circle-sharp" size={18} color="#fff" />
+                <Text style={styles.actionButtonText}>Add funds</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={startWithdrawalProcess}
+              >
+                <Ionicons name="arrow-down-circle-sharp" size={18} />
 
-              <Text>Withdraw funds</Text>
-            </TouchableOpacity>
+                <Text>Withdraw funds</Text>
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-        <TransactionActivityComponent />
-        <CameraVerificationComponent bottomSheetRef={bottomSheetRef} />
+          <TransactionActivityComponent />
+
+          <CameraVerificationComponent bottomSheetRef={bottomSheetRef} />
+        </GestureHandlerRootView>
       </SafeAreaView>
     </StripeProvider>
   );
@@ -136,7 +145,6 @@ const styles = StyleSheet.create({
     flex: 1,
 
     backgroundColor: "#efefef",
-    padding: 20,
   },
 });
 

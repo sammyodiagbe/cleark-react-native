@@ -12,6 +12,7 @@ export default function TabLayout() {
           tabBarStyle: {
             backgroundColor: "transparent",
             elevation: 0,
+            zIndex: 100,
           },
         }}
         tabBar={(props) => <CustomTabBar {...props} />}
