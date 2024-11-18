@@ -11,12 +11,13 @@ import { getPaymentData } from "@/utils/helpers";
 import { useUserContext } from "@/context/userProvider";
 import { useCallback } from "react";
 import UseCameraHook from "@/hooks/useCameraHook";
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
-
+import BottomSheet from "@gorhom/bottom-sheet";
+import { useRef } from "react";
+import CameraVerificationComponent from "@/components/cameraVerificationComponent";
 const WalletScreen = () => {
   const { user } = useUserContext();
   const { permission, requestPermission } = UseCameraHook();
-
+  const bottomSheetRef = useRef<BottomSheet>(null);
   const openPaymentSheet = async () => {
     const { customer, ephemeralKey, clientSecret } = await getPaymentData();
 
@@ -47,6 +48,8 @@ const WalletScreen = () => {
       await requestPermission();
     } else {
       if (!user.stripeConnectAccountLinked) {
+        console.log(bottomSheetRef.current);
+        await bottomSheetRef.current?.expand();
       } else {
         Alert.alert("Go ahead and withdraw funds");
       }
@@ -81,6 +84,7 @@ const WalletScreen = () => {
           </View>
         </View>
         <TransactionActivityComponent />
+        <CameraVerificationComponent bottomSheetRef={bottomSheetRef} />
       </SafeAreaView>
     </StripeProvider>
   );
