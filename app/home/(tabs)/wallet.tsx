@@ -1,24 +1,35 @@
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { Text, View, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  Modal,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TransactionActivityComponent from "@/components/transactionActivity";
+import WebView from "react-native-webview";
 import {
   StripeProvider,
   initPaymentSheet,
   presentPaymentSheet,
 } from "@stripe/stripe-react-native";
-import { getPaymentData } from "@/utils/helpers";
+import { getPaymentData, url } from "@/utils/helpers";
 import { useUserContext } from "@/context/userProvider";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import UseCameraHook from "@/hooks/useCameraHook";
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useRef } from "react";
-import CameraVerificationComponent from "@/components/cameraVerificationComponent";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import VerificationModal from "@/components/verificationModal";
+
 const WalletScreen = () => {
   const { user } = useUserContext();
   const { permission, requestPermission } = UseCameraHook();
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const [openVerificationModal, setOpenVerificationModal] = useState(false);
+  const [accountLinkURL, setAccountLinkURL] = useState("");
   const openPaymentSheet = async () => {
     const { customer, ephemeralKey, clientSecret } = await getPaymentData();
 
@@ -45,16 +56,48 @@ const WalletScreen = () => {
   };
 
   const startWithdrawalProcess = useCallback(async () => {
-    console.log("startWithdrawalProcess");
     if (!permission) {
       await requestPermission();
     } else {
       if (!user.stripeConnectAccountLinked) {
-        console.log(bottomSheetRef.current);
-        console.log("expanding");
-        await bottomSheetRef.current?.expand();
+        console.log(user);
+        // create an account link
+        const connectAccount = await fetch(
+          `${url}/stripe/connect/account/create`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              docId: user._id,
+              email: user.email,
+            }),
+          }
+        );
+        console.log("connect account");
+        const { accountId } = await connectAccount.json();
+
+        console.log("account id", accountId);
+        const accountLink = await fetch(`${url}/stripe/connect/account/link`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            accountId: user.stripeConnectAccountId,
+          }),
+        });
+
+        const { link } = await accountLink.json();
+        console.log("account link", link);
+        if (link) {
+          setOpenVerificationModal(true);
+          setAccountLinkURL(link.url);
+        }
+
+        // setOpenVerificationModal(true);
       } else {
-        1;
         Alert.alert("Go ahead and withdraw funds");
       }
     }
@@ -92,7 +135,11 @@ const WalletScreen = () => {
           </View>
           <TransactionActivityComponent />
 
-          <CameraVerificationComponent bottomSheetRef={bottomSheetRef} />
+          <VerificationModal
+            visible={openVerificationModal}
+            setOpenVerificationModal={setOpenVerificationModal}
+            accountLinkURL={accountLinkURL}
+          />
         </GestureHandlerRootView>
       </SafeAreaView>
     </StripeProvider>
